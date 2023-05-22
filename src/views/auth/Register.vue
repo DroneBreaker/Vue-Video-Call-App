@@ -42,7 +42,7 @@
   export default {
     data: function() {
       return {
-        username: null,
+        username: [],
         passOne: null,
         passTwo: null,
         error: null
@@ -59,31 +59,26 @@
         }
 
         if(!this.error) {
-
-        }
-  
-        // Authenticate 
-        firebase.auth()
-        .createUserWithEmailAndPassword(info.email, info.passOne)
-        .then(() => {
-          userCredentials => {
-            return userCredentials.user.updateProfile({
+                // Authenticate 
+            firebase.auth()
+            .createUserWithEmailAndPassword(info.email, info.password)
+            .then( userCredentials => userCredentials.user.updateProfile({
                 username: info.username
-            }).then(() => {
-                this.$router.replace('/')
-            })
-          }
-        }, error => {
-          this.error = error.message
-        })
-      }
+                })
+                .then(() => {
+                    this.$router.replace('/');
+                }), error => {
+                    this.error = error.message
+                })
+            }
+        }
     },
 
     watch: {
         // To watch the second pass
         passTwo: function() {
             if(this.passOne !== '' && this.passTwo !== '' && this.passTwo !== this.passOne) {
-                this.error = 'Password do not match'
+                this.error = 'Passwords do not match'
             } else {
                 this.error = null
             }
